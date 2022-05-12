@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'testing-angular-with-testing-library';
+  doggos: Dog[] = [
+    { name: 'Fido', bark: 'wooof' },
+    { name: 'Buck', bark: 'growl' },
+    { name: 'Bobo', bark: 'aroof' },
+  ];
+
+  constructor() {}
 }

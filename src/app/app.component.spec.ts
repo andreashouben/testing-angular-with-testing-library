@@ -1,33 +1,30 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { render, screen } from '@testing-library/angular';
 
 describe('AppComponent', () => {
+  const doggos: Dog[] = [
+    { name: 'Fido', bark: 'wooof' },
+    { name: 'Buck', bark: 'growl' },
+    { name: 'Bobo', bark: 'aroof' },
+  ];
+
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [AppComponent],
-    }).compileComponents();
+    await render(AppComponent, {});
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  it('shows a heading called Doggo-World', () => {
+    const heading = screen.getByRole('heading', { name: 'Doggo-World' });
+
+    expect(heading).toBeVisible();
   });
 
-  it(`should have as title 'testing-angular-with-testing-library'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('testing-angular-with-testing-library');
-  });
+  it('shows a list of the expected dogs', () => {
+    const listitems = screen.getAllByRole('listitem');
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain(
-      'testing-angular-with-testing-library app is running!'
-    );
+    doggos.forEach((doggo, index) => {
+      expect(listitems[index]).toHaveTextContent(
+        `${doggo.name} says ${doggo.bark}!`
+      );
+    });
   });
 });
