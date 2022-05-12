@@ -1,0 +1,10 @@
+<div>
+  <figure>
+    <img alt="Image of {{ doggo.name }}" [src]="doggo.imageUrl" />
+    <figcaption>
+      {{ doggo.name }}
+    </figcaption>
+  </figure>
+
+  <button (click)="onClick.emit(doggo)">Bark</button>
+</div>
