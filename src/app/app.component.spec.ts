@@ -4,6 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { DogComponent } from './components/dog/dog.component';
 import { DoglistComponent } from './components/doglist/doglist.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NewDogFormComponent } from './components/new-dog-form/new-dog-form.component';
+import { MockComponent } from 'ng-mocks';
 
 describe('AppComponent', () => {
   const doggos: Dog[] = [
@@ -26,13 +29,19 @@ describe('AppComponent', () => {
   ];
 
   let navigate: any;
+  let component: AppComponent;
 
   beforeEach(async () => {
     const renderResult = await render(AppComponent, {
-      declarations: [DogComponent, DoglistComponent],
-      imports: [AppRoutingModule],
+      declarations: [
+        DogComponent,
+        DoglistComponent,
+        MockComponent(NewDogFormComponent),
+      ],
+      imports: [AppRoutingModule, ReactiveFormsModule],
     });
     navigate = renderResult.navigate;
+    component = renderResult.fixture.componentInstance;
     await navigate('');
   });
 
@@ -81,9 +90,7 @@ describe('AppComponent', () => {
   });
 
   it('navigates to the new dog form when clicking on Enter new Dog', async () => {
-    const link = screen.getByRole('link', { name: 'Enter new Dog' });
-
-    await navigate(link);
+    await navigate(screen.getByRole('link', { name: 'Enter new Dog' }));
 
     expect(screen.getByRole('group', { name: /enter new dog/i })).toBeVisible();
   });

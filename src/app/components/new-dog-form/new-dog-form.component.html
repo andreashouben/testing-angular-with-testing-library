@@ -4,13 +4,35 @@
 
     <label for="name">Name:</label>
     <input type="text" id="name" formControlName="name" />
+    <div
+      *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="name?.errors?.['minlength']">
+        Name needs to have at least 3 letters
+      </div>
+      <div *ngIf="name?.errors?.['required']">Name is required</div>
+    </div>
     <br />
     <label for="imgUrl">ImgUrl:</label>
     <input type="text" id="imgUrl" formControlName="imageUrl" />
+    <div
+      *ngIf="imageUrl?.invalid && (imageUrl?.dirty || imageUrl?.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="imageUrl?.errors?.['required']">Image Url is required</div>
+    </div>
     <br />
     <label for="bark">Bark:</label>
     <input type="text" id="bark" formControlName="bark" />
+    <div
+      *ngIf="bark?.invalid && (bark?.dirty || bark?.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="bark?.errors?.['required']">Bark is required</div>
+    </div>
     <br />
+    <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit">Submit</button>
   </fieldset>
 </form>

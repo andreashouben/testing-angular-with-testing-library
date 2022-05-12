@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DoggoService } from '../../services/doggo.service';
 
 @Component({
   selector: 'app-doglist',
@@ -8,24 +9,11 @@ import { Component } from '@angular/core';
 export class DoglistComponent {
   barkText?: string;
 
-  doggos: Dog[] = [
-    {
-      name: 'Fido',
-      bark: 'wooof',
-      imageUrl:
-        'https://images.dog.ceo/breeds/terrier-norfolk/n02094114_4127.jpg',
-    },
-    {
-      name: 'Buck',
-      bark: 'growl',
-      imageUrl: 'https://images.dog.ceo/breeds/appenzeller/n02107908_2134.jpg',
-    },
-    {
-      name: 'Bobo',
-      bark: 'aroof',
-      imageUrl: 'https://images.dog.ceo/breeds/shihtzu/n02086240_4751.jpg',
-    },
-  ];
+  doggos: Dog[] = [];
+
+  constructor(dogService: DoggoService) {
+    this.doggos = dogService.getDoggos;
+  }
 
   onClick(doggo: Dog) {
     this.barkText = `${doggo.name} says: ${doggo.bark}!`;

@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DoggoService } from '../../services/doggo.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-dog-form',
@@ -7,17 +9,36 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./new-dog-form.component.css'],
 })
 export class NewDogFormComponent {
-  @Output()
-  onSubmitDog = new EventEmitter<Dog>();
+  constructor(private doggoService: DoggoService, private router: Router) {}
 
   dogForm = new FormGroup({
-    name: new FormControl(''),
-    bark: new FormControl(''),
-    imageUrl: new FormControl(''),
+    name: new FormControl('', [Validators.minLength(3), Validators.required]),
+    bark: new FormControl('', [Validators.required]),
+    imageUrl: new FormControl('', [Validators.required]),
   });
 
   submitDog() {
     const dog: Dog = this.dogForm.value;
-    this.onSubmitDog.emit(dog);
+    this.dogForm.markAllAsTouched();
+    if (this.dogForm.valid) {
+      this.doggoService.addDoggo(dog);
+      this.router.navigateByUrl('');
+    }
+  }
+
+  cancel() {
+    this.router.navigateByUrl('');
+  }
+
+  get name() {
+    return this.dogForm.get('name');
+  }
+
+  get imageUrl() {
+    return this.dogForm.get('imageUrl');
+  }
+
+  get bark() {
+    return this.dogForm.get('bark');
   }
 }
