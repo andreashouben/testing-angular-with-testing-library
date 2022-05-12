@@ -5,10 +5,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DogComponent } from './components/dog/dog.component';
 import { DoglistComponent } from './components/doglist/doglist.component';
+import { NewDogFormComponent } from './components/new-dog-form/new-dog-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, DogComponent, DoglistComponent],
-  imports: [BrowserModule, AppRoutingModule],
+  declarations: [
+    AppComponent,
+    DogComponent,
+    DoglistComponent,
+    NewDogFormComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

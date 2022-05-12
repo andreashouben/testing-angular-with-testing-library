@@ -25,11 +25,14 @@ describe('AppComponent', () => {
     },
   ];
 
+  let navigate: any;
+
   beforeEach(async () => {
-    const { navigate } = await render(AppComponent, {
+    const renderResult = await render(AppComponent, {
       declarations: [DogComponent, DoglistComponent],
       imports: [AppRoutingModule],
     });
+    navigate = renderResult.navigate;
     await navigate('');
   });
 
@@ -75,5 +78,13 @@ describe('AppComponent', () => {
     await userEvent.click(buttons[2]);
 
     expect(screen.getByText('Bobo says: aroof!'));
+  });
+
+  it('navigates to the new dog form when clicking on Enter new Dog', async () => {
+    const link = screen.getByRole('link', { name: 'Enter new Dog' });
+
+    await navigate(link);
+
+    expect(screen.getByRole('group', { name: /enter new dog/i })).toBeVisible();
   });
 });
