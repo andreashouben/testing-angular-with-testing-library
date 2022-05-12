@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DoggoService } from './doggo.service';
+import { HttpClientModule } from '@angular/common/http';
+import { waitFor } from '@testing-library/angular';
+import { lastValueFrom } from 'rxjs';
 
 describe('DoggoService', () => {
   let service: DoggoService;
@@ -25,22 +28,27 @@ describe('DoggoService', () => {
   ];
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+    });
     service = TestBed.inject(DoggoService);
   });
 
-  it('returns the doggos', () => {
-    expect(service.getDoggos).toEqual(expectedDoggos);
+  it('returns the doggos', async () => {
+    let actualDoggos: Dog[] = [];
+    service.getDoggos.subscribe((received) => (actualDoggos = received));
+    await waitFor(() => expect(actualDoggos).toEqual(expectedDoggos));
   });
 
-  it('adds a doggo', () => {
+  it('adds a doggo', async () => {
     const newDog = {
       name: 'john',
       imageUrl: 'https://some.url/image.png',
       bark: 'bleargh',
     };
-    service.addDoggo(newDog);
 
-    expect(service.getDoggos).toEqual([...expectedDoggos, newDog]);
+    await lastValueFrom(service.addDoggo(newDog));
+    const actualDoggos = await lastValueFrom(service.getDoggos);
+    expect(actualDoggos).toContainEqual(newDog);
   });
 });

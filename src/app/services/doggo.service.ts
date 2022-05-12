@@ -1,33 +1,19 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DoggoService {
-  private doggos: Dog[] = [
-    {
-      name: 'Fido',
-      bark: 'wooof',
-      imageUrl:
-        'https://images.dog.ceo/breeds/terrier-norfolk/n02094114_4127.jpg',
-    },
-    {
-      name: 'Buck',
-      bark: 'growl',
-      imageUrl: 'https://images.dog.ceo/breeds/appenzeller/n02107908_2134.jpg',
-    },
-    {
-      name: 'Bobo',
-      bark: 'aroof',
-      imageUrl: 'https://images.dog.ceo/breeds/shihtzu/n02086240_4751.jpg',
-    },
-  ];
+  constructor(private httpClient: HttpClient) {}
+
+  backendUrl = '/api/doggos';
 
   get getDoggos() {
-    return this.doggos;
+    return this.httpClient.get<Dog[]>(this.backendUrl);
   }
 
   addDoggo(dog: Dog) {
-    this.doggos = [...this.doggos, dog];
+    return this.httpClient.put(this.backendUrl, dog);
   }
 }

@@ -3,3 +3,4 @@ type Dog = {
   bark: string;
   imageUrl: string;
 };
+type LoadingStatus = 'loading' | 'loaded' | 'error';

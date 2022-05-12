@@ -1,22 +1,27 @@
 import { NewDogFormComponent } from './new-dog-form.component';
-import { render, screen, within } from '@testing-library/angular';
+import { render, screen, waitFor, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DoggoService } from '../../services/doggo.service';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { lastValueFrom } from 'rxjs';
 
 describe('NewDogFormComponent', () => {
   let mockAddFunction = jest.fn();
   let mockNavigateFunction = jest.fn();
 
+  let doggoService: DoggoService;
+
   beforeEach(async () => {
     await render(NewDogFormComponent, {
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientModule],
       componentProviders: [
-        { provide: DoggoService, useValue: { addDoggo: mockAddFunction } },
         { provide: Router, useValue: { navigateByUrl: mockNavigateFunction } },
       ],
     });
+    doggoService = TestBed.inject(DoggoService);
   });
   afterEach(() => {
     jest.resetAllMocks();
@@ -44,8 +49,10 @@ describe('NewDogFormComponent', () => {
       bark: 'BARK! BARK! BARK!',
     };
 
-    expect(mockAddFunction).toHaveBeenCalledWith(expectedDog);
-    expect(mockNavigateFunction).toHaveBeenCalledWith('');
+    await waitFor(() => expect(mockNavigateFunction).toHaveBeenCalledWith(''));
+
+    const dogs = await lastValueFrom(doggoService.getDoggos);
+    expect(dogs).toContainEqual(expectedDog);
   });
 
   it('should ignore the inputs and just navigate to home when clicking the cancel button', async () => {
@@ -84,5 +91,29 @@ describe('NewDogFormComponent', () => {
     expect(screen.getByText('Name needs to have at least 3 letters'));
     expect(mockAddFunction).not.toHaveBeenCalledWith();
     expect(mockNavigateFunction).not.toHaveBeenCalledWith('');
+  });
+
+  it('should show a message if the backend rejects the call', async () => {
+    const fieldSet = screen.getByRole('group', { name: /Enter new dog/i });
+    const nameInput = within(fieldSet).getByLabelText(/name:/i);
+    const urlInput = within(fieldSet).getByLabelText(/ImgUrl:/i);
+    const barkInput = within(fieldSet).getByLabelText(/bark:/i);
+
+    await userEvent.type(nameInput, 'PAUL');
+    await userEvent.type(
+      urlInput,
+      'https://images.dog.ceo/breeds/terrier-patterdale/dog-1268559_640.jpg'
+    );
+    await userEvent.type(barkInput, 'BARK! BARK! BARK!');
+
+    await userEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+    expect(
+      await screen.findByText('Do not use Paul or Earl as dog name.')
+    ).toBeVisible();
+
+    await waitFor(() =>
+      expect(mockNavigateFunction).not.toHaveBeenCalledWith('')
+    );
   });
 });

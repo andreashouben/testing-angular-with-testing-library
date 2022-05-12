@@ -17,12 +17,21 @@ export class NewDogFormComponent {
     imageUrl: new FormControl('', [Validators.required]),
   });
 
+  backendErrors: undefined | { error: string };
+
   submitDog() {
     const dog: Dog = this.dogForm.value;
     this.dogForm.markAllAsTouched();
+
     if (this.dogForm.valid) {
-      this.doggoService.addDoggo(dog);
-      this.router.navigateByUrl('');
+      this.doggoService.addDoggo(dog).subscribe({
+        next: () => {
+          this.router.navigateByUrl('');
+        },
+        error: ({ error }) => {
+          this.backendErrors = error;
+        },
+      });
     }
   }
 

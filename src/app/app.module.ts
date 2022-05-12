@@ -7,6 +7,7 @@ import { DogComponent } from './components/dog/dog.component';
 import { DoglistComponent } from './components/doglist/doglist.component';
 import { NewDogFormComponent } from './components/new-dog-form/new-dog-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     DoglistComponent,
     NewDogFormComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

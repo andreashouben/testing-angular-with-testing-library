@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DoggoService } from '../../services/doggo.service';
 
 @Component({
@@ -6,16 +6,28 @@ import { DoggoService } from '../../services/doggo.service';
   templateUrl: './doglist.component.html',
   styleUrls: ['./doglist.component.css'],
 })
-export class DoglistComponent {
+export class DoglistComponent implements OnInit {
   barkText?: string;
 
   doggos: Dog[] = [];
 
-  constructor(dogService: DoggoService) {
-    this.doggos = dogService.getDoggos;
-  }
+  loadingStatus: LoadingStatus = 'loading';
+
+  constructor(private dogService: DoggoService) {}
 
   onClick(doggo: Dog) {
     this.barkText = `${doggo.name} says: ${doggo.bark}!`;
+  }
+
+  ngOnInit(): void {
+    this.dogService.getDoggos.subscribe(
+      (values) => {
+        this.doggos = values;
+        this.loadingStatus = 'loaded';
+      },
+      () => {
+        this.loadingStatus = 'error';
+      }
+    );
   }
 }

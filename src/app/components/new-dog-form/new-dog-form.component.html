@@ -32,6 +32,9 @@
       <div *ngIf="bark?.errors?.['required']">Bark is required</div>
     </div>
     <br />
+    <div *ngIf="backendErrors">
+      {{ backendErrors.error }}
+    </div>
     <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit">Submit</button>
   </fieldset>

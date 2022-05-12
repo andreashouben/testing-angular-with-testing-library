@@ -1,4 +1,9 @@
 <a routerLink="/newdog">Enter new Dog</a>
+<div *ngIf="loadingStatus === 'loading'">Loading...</div>
+<div *ngIf="loadingStatus === 'error'">
+  Oh no, there was an error loading the dogs...
+</div>
+
 <app-dog
   *ngFor="let doggo of doggos"
   [doggo]="doggo"
