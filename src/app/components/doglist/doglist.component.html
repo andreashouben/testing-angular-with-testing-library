@@ -1,0 +1,7 @@
+<app-dog
+  *ngFor="let doggo of doggos"
+  [doggo]="doggo"
+  (onClick)="onClick(doggo)"
+></app-dog>
+
+<p data-testid="bark-text" *ngIf="barkText">{{ barkText }}</p>

@@ -1,7 +1,9 @@
 import { AppComponent } from './app.component';
-import { getByText, render, screen } from '@testing-library/angular';
+import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { DogComponent } from './components/dog/dog.component';
+import { DoglistComponent } from './components/doglist/doglist.component';
+import { AppRoutingModule } from './app-routing.module';
 
 describe('AppComponent', () => {
   const doggos: Dog[] = [
@@ -24,9 +26,11 @@ describe('AppComponent', () => {
   ];
 
   beforeEach(async () => {
-    await render(AppComponent, {
-      declarations: [DogComponent],
+    const { navigate } = await render(AppComponent, {
+      declarations: [DogComponent, DoglistComponent],
+      imports: [AppRoutingModule],
     });
+    await navigate('');
   });
 
   it('shows a heading called Doggo-World', () => {

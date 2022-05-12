@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'app-doglist',
+  templateUrl: './doglist.component.html',
+  styleUrls: ['./doglist.component.css'],
 })
-export class AppComponent {
+export class DoglistComponent {
+  barkText?: string;
+
   doggos: Dog[] = [
     {
       name: 'Fido',
@@ -25,5 +27,7 @@ export class AppComponent {
     },
   ];
 
-  constructor() {}
+  onClick(doggo: Dog) {
+    this.barkText = `${doggo.name} says: ${doggo.bark}!`;
+  }
 }
